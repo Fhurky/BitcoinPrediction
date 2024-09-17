@@ -58,6 +58,7 @@ plt.bar(model_names, predictions_means, color=['blue', 'green', 'orange', 'red',
 
 # Plot the average of all models as an additional bar
 plt.bar('Average of Models', average_mean, color='gray', label='Average of Models')
+plt.bar('Prediction', 0, color='green', label='Prediction')
 
 # Title and labels
 plt.title('Model Prediction Averages and Overall Model Average')
