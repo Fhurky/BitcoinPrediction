@@ -7,6 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
+import configparser
 
 # Load the data and drop unnecessary columns
 try:
@@ -62,7 +63,7 @@ history = model.fit(train_x, train_y, epochs=2, batch_size=32, validation_data=(
 
 # Save the model
 try:
-    model.save('Models/LSTM_model_close_only.h5')
+    model.save('LSTM_model_close_only.h5')
     print("LSTM model saved successfully.")
 except Exception as e:
     print(f"Error saving the model: {e}")
@@ -74,9 +75,21 @@ predictions = model.predict(test_x)
 predictions_rescaled = scaler.inverse_transform(predictions)
 test_y_rescaled = scaler.inverse_transform(test_y.reshape(-1, 1))
 
-# Evaluate the R2 score of the model
-r2 = r2_score(test_y_rescaled, predictions_rescaled)
-print(f"R2-score: {r2:.2f}")
+
+# Evaluate and print the R2 score of the model
+print("R2-score: %.2f" % r2_score(test_y_rescaled, predictions_rescaled))
+print("MSE-score: %.2f" % mean_squared_error(test_y_rescaled, predictions_rescaled))
+
+# Config dosyasını oluşturma ve okuma
+config = configparser.ConfigParser()
+config.read('application.properties')
+
+# Yeni bir değer eklemek
+config.set('Metrics', 'lstmregression_mse-score',str(mean_squared_error(test_y_rescaled, predictions_rescaled)))
+
+# Dosyayı güncelleme
+with open('application.properties', 'w') as configfile:
+    config.write(configfile)
 
 # Plot the results
 plt.figure(figsize=(14,5))

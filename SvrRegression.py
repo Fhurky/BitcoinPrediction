@@ -6,6 +6,7 @@ import time
 from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
+import configparser
 
 # Load the data and drop unnecessary columns
 try:
@@ -53,6 +54,17 @@ predictions = SvrModel.predict(test_x)
 # Evaluate and print the R2 score of the model
 print("R2-score: %.2f" % r2_score(test_y, predictions))
 print("MSE-score: %.2f" % mean_squared_error(test_y, predictions))
+
+# Config dosyasını oluşturma ve okuma
+config = configparser.ConfigParser()
+config.read('application.properties')
+
+# Yeni bir değer eklemek
+config.set('Metrics', 'svrregression_mse-score',str(mean_squared_error(test_y, predictions)))
+
+# Dosyayı güncelleme
+with open('application.properties', 'w') as configfile:
+    config.write(configfile)
 
 # Randomly sample 100 data points from the test set
 sample_size = 100
