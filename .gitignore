@@ -2,3 +2,4 @@
 decision_tree_model.pkl
 RandomForest_regression_model.pkl
 btcusd.csv
+SVR_regression_model.pkl
