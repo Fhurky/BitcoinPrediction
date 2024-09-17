@@ -12,7 +12,7 @@ import configparser
 # Load the data and drop unnecessary columns
 
 try:
-    data = pd.read_csv('btcusd.csv')
+    data = pd.read_csv('Data/btcusd.csv')
     data = data[['Close']]  # Only keep 'Close' column
 except FileNotFoundError:
     print("The file 'btcusd.csv' was not found.")

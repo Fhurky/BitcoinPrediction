@@ -9,7 +9,7 @@ import configparser
 
 # Load the data and drop unnecessary columns
 try:
-    data = pd.read_csv('btcusd.csv')
+    data = pd.read_csv('Data/btcusd.csv')
     data = data.drop(['Timestamp', 'Volume'], axis=1)  # Drop 'Timestamp' and 'Volume' columns
 except FileNotFoundError:
     print("The file 'btcusd.csv' was not found.")
@@ -49,7 +49,7 @@ config = configparser.ConfigParser()
 config.read('application.properties')
 
 # Yeni bir değer eklemek
-config.set('Metrics', 'decissionregression_mse-score',str(mean_squared_error(test_y, predictions)))
+config.set('Metrics', 'decisionregression_mse-score',str(mean_squared_error(test_y, predictions)))
 
 # Dosyayı güncelleme
 with open('application.properties', 'w') as configfile:

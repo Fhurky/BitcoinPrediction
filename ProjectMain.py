@@ -1,13 +1,13 @@
 import pandas as pd
 import numpy as np
 import pickle as pc
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model # type: ignore
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import configparser
 
 # CSV dosyasını okuma
-data = pd.read_csv("btcusd.csv")
+data = pd.read_csv("Data/btcusd.csv")
 
 # Config dosyasını oluşturma ve okuma
 config = configparser.ConfigParser()
