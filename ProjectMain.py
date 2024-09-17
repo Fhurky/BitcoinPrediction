@@ -1,11 +1,44 @@
 import pandas as pd
-import pickle as pc
-import matplotlib.pyplot as plt
 import numpy as np
+import pickle as pc
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
 
-new_data = pd.DataFrame([[57864, 57864, 57836]], columns=['Open', 'High', 'Low'])
+# CSV dosyasını okuma
+data = pd.read_csv("btcusd.csv")
 
-# Load the Model
+# Verinin ters çevrilmiş hali
+rows_1_to_50 = data.iloc[1:51][::-1]  # Veriyi ters çevirme
+test4LSTM = rows_1_to_50['Close'].values
+
+# Yeni veriyi DataFrame'e dönüştürme
+new_data = pd.DataFrame(test4LSTM, columns=['Close'])
+
+# 'Close' verilerini normalizasyon için fit edilmiştir
+scaler = MinMaxScaler()
+scaler.fit(data[['Close']])  # Eğitim sırasında kullanılan scaler'ı fit et
+
+# Veriyi normalizasyon için ölçekleme
+test4LSTM_scaled = scaler.transform(new_data)
+
+# LSTM için uygun formatta veri hazırlama
+# TIME_STEPS, LSTM modelinizi eğitirken kullandığınız zaman adımı sayısıdır
+TIME_STEPS = 50
+X_test_seq = np.array(test4LSTM_scaled).reshape(1, TIME_STEPS, 1)  # (1, 50, 1) şeklinde
+
+# LSTM modelini yükleme
+lstm_model = load_model('LSTM_model_close_only.h5')
+
+# Tahmin yapma
+lstm_prediction_scaled = lstm_model.predict(X_test_seq)
+
+# Tahmini geri ölçeklendirme
+lstm_prediction = scaler.inverse_transform(lstm_prediction_scaled.reshape(-1, 1))[0][0]
+
+# Tahmini gösterme
+print(f"LSTM Model Tahmini: {lstm_prediction:.2f}")
+# Diğer modellerle tahmin yapma
 with open('Multilinear_regression_model.pkl', 'rb') as file:
     Multilinear_model = pc.load(file)
 
@@ -25,49 +58,54 @@ with open('SVR_regression_model.pkl', 'rb') as file:
 with open('KNN_regression_model.pkl', 'rb') as file:
     KNN_model = pc.load(file)
 
-linear_predictions = Multilinear_model.predict(new_data)
-tree_predictions = Tree_model.predict(new_data)
-forest_predictions = Forest_model.predict(new_data)
-svr_predictions = SVR_model.predict(new_data)
-knn_predictions = KNN_model.predict(new_data)
-   
-print("LinearModel: ",linear_predictions)
-print("TreeModel: ",tree_predictions)
-print("ForestModel: ",forest_predictions)
-print("SvrModel: ",svr_predictions)
-print("KnnModel: ",knn_predictions)
+# Verileri doğru formata dönüştürme
+new_data_for_other_models = pd.DataFrame([[57854, 57864, 57835]], columns=['Open', 'High', 'Low'])
+
+linear_predictions = Multilinear_model.predict(new_data_for_other_models)
+tree_predictions = Tree_model.predict(new_data_for_other_models)
+forest_predictions = Forest_model.predict(new_data_for_other_models)
+svr_predictions = SVR_model.predict(new_data_for_other_models)
+knn_predictions = KNN_model.predict(new_data_for_other_models)
+
+# Tahminleri gösterme
+print("LinearModel: ", linear_predictions)
+print("TreeModel: ", tree_predictions)
+print("ForestModel: ", forest_predictions)
+print("SVRModel: ", svr_predictions)
+print("KNNModel: ", knn_predictions)
+print("LSTMModel: ", lstm_prediction)
 
 # Modellerin isimleri ve tahmin sonuçlarının ortalamaları
-model_names = ['Linear Model', 'Tree Model', 'Forest Model', 'SVR Model', 'KNN Model']
+model_names = ['Linear Model', 'Tree Model', 'Forest Model', 'SVR Model', 'KNN Model', 'LSTM Model']
 predictions_means = [
     np.mean(linear_predictions),
     np.mean(tree_predictions),
     np.mean(forest_predictions),
     np.mean(svr_predictions),
-    np.mean(knn_predictions)
+    np.mean(knn_predictions),
+    np.mean(lstm_prediction),
 ]
 
-# Calculate the average of all models' predictions
+# Tüm modellerin tahmin ortalamasını hesapla
 average_mean = np.mean(predictions_means)
 
-# Create a bar chart
+# Bar grafiği oluşturma
 plt.figure(figsize=(12, 7))
 
-# Plot each model's average prediction as a bar
-plt.bar(model_names, predictions_means, color=['blue', 'green', 'orange', 'red', 'purple'], label='Model Averages')
+# Her modelin tahmin ortalamasını çubuk olarak göster
+plt.bar(model_names, predictions_means, color=['blue', 'green', 'orange', 'red', 'purple', 'cyan'], label='Model Averages')
 
-# Plot the average of all models as an additional bar
+# Tüm modellerin ortalamasını ek bir çubuk olarak göster
 plt.bar('Average of Models', average_mean, color='gray', label='Average of Models')
-plt.bar('Prediction', 0, color='green', label='Prediction')
 
-# Title and labels
+# Başlık ve etiketler
 plt.title('Model Prediction Averages and Overall Model Average')
 plt.xlabel('Models')
 plt.ylabel('Prediction Average')
 
-# Set y-axis limit to show a range of 100 units
+# Y ekseni limitlerini ayarla
 plt.ylim([min(predictions_means + [average_mean]) - 20, max(predictions_means + [average_mean]) + 20])
 
-plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.xticks(rotation=45)  # X ekseni etiketlerini döndür
 plt.legend()
 plt.show()
