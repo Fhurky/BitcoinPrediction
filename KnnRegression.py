@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_squared_error
 
 # Load the data and drop unnecessary columns
 try:
@@ -43,6 +43,7 @@ predictions = Knn.predict(test_x)
 
 # Evaluate and print the R2 score of the model
 print("R2-score: %.2f" % r2_score(test_y, predictions))
+print("MSE-score: %.2f" % mean_squared_error(test_y, predictions))
 
 # Randomly sample 100 data points from the test set
 sample_size = 100

@@ -1,8 +1,10 @@
 import pandas as pd
 import pickle as pc
+import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_squared_error
 
 
 # Load the data and drop unnecessary columns
@@ -40,6 +42,26 @@ predictions = LM.predict(test_x)
 
 # Evaluate and print the R2 score of the model
 print("R2-score: %.2f" % r2_score(test_y, predictions))
+print("MSE-score: %.2f" % mean_squared_error(test_y, predictions))
+
+# Randomly sample 100 data points from the test set
+sample_size = 100
+sample_indices = np.random.choice(len(test_y), size=sample_size, replace=False)
+sample_test_y = test_y.iloc[sample_indices]
+sample_predictions = predictions[sample_indices]
+
+# Plot the predicted vs actual values for the sampled data
+plt.figure(figsize=(10, 6))
+plt.scatter(sample_test_y, sample_predictions, color='blue', marker='o', alpha=0.5)
+plt.plot([min(sample_test_y), max(sample_test_y)], [min(sample_test_y), max(sample_test_y)], color='red', linestyle='--', lw=2)
+plt.title('Predicted vs Actual Values (Sampled Data)')
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.grid(True)
+plt.show()
+
+def r2_score():
+    return  r2_score(test_y, predictions)
 
 # Define a function for making predictions with new data
 def prediction(unknown):

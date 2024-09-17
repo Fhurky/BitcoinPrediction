@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_squared_error
 
 # Load the data and drop unnecessary columns
 try:
@@ -20,7 +20,7 @@ except KeyError as e:
     exit()
 
 # Sample only 1% of the data
-# data = data.sample(frac=0.1, random_state=0)
+data = data.sample(frac=0.1, random_state=0)
 
 # Sort data by index if necessary, as LSTM expects sequential data
 data = data.sort_index()
@@ -58,7 +58,7 @@ model.add(Dense(units=1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train the model
-history = model.fit(train_x, train_y, epochs=1, batch_size=32, validation_data=(test_x, test_y))
+history = model.fit(train_x, train_y, epochs=2, batch_size=32, validation_data=(test_x, test_y))
 
 # Save the model
 try:

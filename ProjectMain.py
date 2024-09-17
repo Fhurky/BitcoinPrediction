@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 data = pd.read_csv("btcusd.csv")
 
 # Verinin ters çevrilmiş hali
-rows_1_to_50 = data.iloc[1:51][::-1]  # Veriyi ters çevirme
+rows_1_to_50 = data.iloc[1:26][::-1]  # Veriyi ters çevirme
 test4LSTM = rows_1_to_50['Close'].values
 
 # Yeni veriyi DataFrame'e dönüştürme
@@ -24,8 +24,8 @@ test4LSTM_scaled = scaler.transform(new_data)
 
 # LSTM için uygun formatta veri hazırlama
 # TIME_STEPS, LSTM modelinizi eğitirken kullandığınız zaman adımı sayısıdır
-TIME_STEPS = 50
-X_test_seq = np.array(test4LSTM_scaled).reshape(1, TIME_STEPS, 1)  # (1, 50, 1) şeklinde
+TIME_STEPS = 25
+X_test_seq = np.array(test4LSTM_scaled).reshape(1, TIME_STEPS, 1)  # (1, 25, 1) şeklinde
 
 # LSTM modelini yükleme
 lstm_model = load_model('LSTM_model_close_only.h5')
