@@ -30,7 +30,7 @@ Tree.fit(train_x, train_y)  # Fit the model to the training data
 
 # Save the model
 try:
-    with open('decision_tree_model.pkl', 'wb') as file:
+    with open('Models/decision_tree_model.pkl', 'wb') as file:
         pc.dump(Tree, file)
     print("Model saved successfully.")
 except Exception as e:

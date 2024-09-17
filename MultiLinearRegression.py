@@ -31,7 +31,7 @@ LM.fit(train_x, train_y)
 
 # Save the Model
 try:
-    with open('Multilinear_regression_model.pkl', 'wb') as file:
+    with open('Models/Multilinear_regression_model.pkl', 'wb') as file:
         pc.dump(LM, file)
     print("Model saved successfully.")
 except Exception as e:

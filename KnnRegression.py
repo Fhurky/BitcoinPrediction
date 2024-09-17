@@ -32,7 +32,7 @@ Knn.fit(train_x, train_y)
 
 # Save the Model
 try:
-    with open('KNN_regression_model.pkl', 'wb') as file:
+    with open('Models/KNN_regression_model.pkl', 'wb') as file:
         pc.dump(Knn, file)
     print("Model saved successfully.")
 except Exception as e:

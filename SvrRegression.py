@@ -41,7 +41,7 @@ print(f"Model training time: {training_time:.2f} seconds")
 
 # Save the Model
 try:
-    with open('SVR_regression_model.pkl', 'wb') as file:
+    with open('Models/SVR_regression_model.pkl', 'wb') as file:
         pc.dump(SvrModel, file)
     print("Model saved successfully.")
 except Exception as e:

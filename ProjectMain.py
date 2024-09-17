@@ -28,7 +28,7 @@ TIME_STEPS = 25
 X_test_seq = np.array(test4LSTM_scaled).reshape(1, TIME_STEPS, 1)  # (1, 25, 1) şeklinde
 
 # LSTM modelini yükleme
-lstm_model = load_model('LSTM_model_close_only.h5')
+lstm_model = load_model('Models/LSTM_model_close_only.h5')
 
 # Tahmin yapma
 lstm_prediction_scaled = lstm_model.predict(X_test_seq)
@@ -39,23 +39,23 @@ lstm_prediction = scaler.inverse_transform(lstm_prediction_scaled.reshape(-1, 1)
 # Tahmini gösterme
 print(f"LSTM Model Tahmini: {lstm_prediction:.2f}")
 # Diğer modellerle tahmin yapma
-with open('Multilinear_regression_model.pkl', 'rb') as file:
+with open('Models/Multilinear_regression_model.pkl', 'rb') as file:
     Multilinear_model = pc.load(file)
 
 # Load the Model
-with open('decision_tree_model.pkl', 'rb') as file:
+with open('Models/decision_tree_model.pkl', 'rb') as file:
     Tree_model = pc.load(file)
 
 # Load the Model
-with open('RandomForest_regression_model.pkl', 'rb') as file:
+with open('Models/RandomForest_regression_model.pkl', 'rb') as file:
     Forest_model = pc.load(file)
 
 # Load the Model
-with open('SVR_regression_model.pkl', 'rb') as file:
+with open('Models/SVR_regression_model.pkl', 'rb') as file:
     SVR_model = pc.load(file)
 
 # Load the Model
-with open('KNN_regression_model.pkl', 'rb') as file:
+with open('Models/KNN_regression_model.pkl', 'rb') as file:
     KNN_model = pc.load(file)
 
 # Verileri doğru formata dönüştürme

@@ -32,7 +32,7 @@ RF_model.fit(train_x, train_y)
 
 # Save the Model
 try:
-    with open('RandomForest_regression_model.pkl', 'wb') as file:
+    with open('Models/RandomForest_regression_model.pkl', 'wb') as file:
         pc.dump(RF_model, file)
     print("Model saved successfully.")
 except Exception as e:

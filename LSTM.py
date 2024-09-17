@@ -62,7 +62,7 @@ history = model.fit(train_x, train_y, epochs=2, batch_size=32, validation_data=(
 
 # Save the model
 try:
-    model.save('LSTM_model_close_only.h5')
+    model.save('Models/LSTM_model_close_only.h5')
     print("LSTM model saved successfully.")
 except Exception as e:
     print(f"Error saving the model: {e}")
