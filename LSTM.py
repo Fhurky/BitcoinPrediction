@@ -3,13 +3,14 @@ import numpy as np
 import pickle as pc
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import LSTM, Dense, Dropout # type: ignore
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
 import configparser
 
 # Load the data and drop unnecessary columns
+
 try:
     data = pd.read_csv('btcusd.csv')
     data = data[['Close']]  # Only keep 'Close' column
@@ -80,14 +81,11 @@ test_y_rescaled = scaler.inverse_transform(test_y.reshape(-1, 1))
 print("R2-score: %.2f" % r2_score(test_y_rescaled, predictions_rescaled))
 print("MSE-score: %.2f" % mean_squared_error(test_y_rescaled, predictions_rescaled))
 
-# Config dosyasını oluşturma ve okuma
 config = configparser.ConfigParser()
 config.read('application.properties')
 
-# Yeni bir değer eklemek
 config.set('Metrics', 'lstmregression_mse-score',str(mean_squared_error(test_y_rescaled, predictions_rescaled)))
 
-# Dosyayı güncelleme
 with open('application.properties', 'w') as configfile:
     config.write(configfile)
 
