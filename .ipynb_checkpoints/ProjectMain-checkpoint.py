@@ -166,5 +166,3 @@ plt.ylim([min(predictions_means + [average_mean, weighted_prediction]) - 5000,
 plt.xticks(rotation=45)  # X ekseni etiketlerini döndür
 plt.legend()
 plt.show()
-
-
