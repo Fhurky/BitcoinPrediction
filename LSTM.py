@@ -22,7 +22,7 @@ except KeyError as e:
     exit()
 
 # Sample only 1% of the data
-data = data.sample(frac=0.1, random_state=0)
+# data = data.sample(frac=0.1, random_state=0)
 
 # Sort data by index if necessary, as LSTM expects sequential data
 data = data.sort_index()
@@ -60,11 +60,11 @@ model.add(Dense(units=1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train the model
-history = model.fit(train_x, train_y, epochs=2, batch_size=32, validation_data=(test_x, test_y))
+history = model.fit(train_x, train_y, epochs=4, batch_size=32, validation_data=(test_x, test_y))
 
 # Save the model
 try:
-    model.save('LSTM_model_close_only.h5')
+    model.save('Models/LSTM_model_close_only.h5')
     print("LSTM model saved successfully.")
 except Exception as e:
     print(f"Error saving the model: {e}")
