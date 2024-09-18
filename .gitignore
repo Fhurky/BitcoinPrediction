@@ -5,3 +5,4 @@ btcusd.csv
 SVR_regression_model.pkl
 KNN_regression_model.pkl
 LSTM_model_close_only.h5
+Models/KernelRidge_regression_model.pkl

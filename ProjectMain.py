@@ -64,6 +64,10 @@ with open('Models/SVR_regression_model.pkl', 'rb') as file:
 with open('Models/KNN_regression_model.pkl', 'rb') as file:
     KNN_model = pc.load(file)
 
+# Load the Model
+with open('Models/KernelRidge_regression_model.pkl', 'rb') as file:
+    KernelRidge_model = pc.load(file)
+
 # Verileri doğru formata dönüştürme
 new_data_for_other_models = pd.DataFrame([[57854, 57864, 57835]], columns=['Open', 'High', 'Low'])
 
@@ -72,6 +76,7 @@ tree_predictions = Tree_model.predict(new_data_for_other_models)
 forest_predictions = Forest_model.predict(new_data_for_other_models)
 svr_predictions = SVR_model.predict(new_data_for_other_models)
 knn_predictions = KNN_model.predict(new_data_for_other_models)
+kernelRidge_prediction = KernelRidge_model.predict(new_data_for_other_models)
 
 # Tahminleri gösterme
 # print("LinearModel: ", linear_predictions)
@@ -80,14 +85,16 @@ knn_predictions = KNN_model.predict(new_data_for_other_models)
 # print("SVRModel: ", svr_predictions)
 # print("KNNModel: ", knn_predictions)
 # print("LSTMModel: ", lstm_prediction)
+# print("KernelRidge: ", kernelRidge_prediction)
 
 # Mevcut değerleri okuma ve dönüşüm
-MultilinearRegression_mse_score = float(config.get('Metrics', 'MultilinearRegression_MSE-score'))
+MultilinearRegression_mse_score = float(config.get('Metrics', 'multilinearRegression_mse-score'))
 decisionregression_mse_score = float(config.get('Metrics', 'decisionregression_mse-score'))
 svrregression_mse_score = float(config.get('Metrics', 'svrregression_mse-score'))
 lstmregression_mse_score = float(config.get('Metrics', 'lstmregression_mse-score'))
 knnregression_mse_score = float(config.get('Metrics', 'knnregression_mse-score'))
 forestregression_mse_score = float(config.get('Metrics', 'forestregression_mse-score'))
+kernelRidgeregression_mse_score = float(config.get('Metrics', 'KernelRidgeRegression_MSE-score'))
 
 # Modellerin MSE skorları ve tahminleri
 mse_scores = {
@@ -96,7 +103,8 @@ mse_scores = {
     'SVR Regression': svrregression_mse_score,
     'LSTM Regression': lstmregression_mse_score,
     'KNN Regression': knnregression_mse_score,
-    'Random Forest': forestregression_mse_score
+    'Random Forest': forestregression_mse_score,
+    'Kernel Ridge': kernelRidgeregression_mse_score
 }
 
 predictions = {
@@ -105,7 +113,8 @@ predictions = {
     'SVR Regression': np.mean(svr_predictions),
     'LSTM Regression': lstm_prediction,
     'KNN Regression': np.mean(knn_predictions),
-    'Random Forest': np.mean(forest_predictions)
+    'Random Forest': np.mean(forest_predictions),
+    'Kernel Ridge' : np.mean(kernelRidge_prediction)
 }
 
 # Hesaplama: İnvers MSE'ler ve ağırlıklar
@@ -118,14 +127,15 @@ weighted_prediction = sum(weights[model] * predictions[model] for model in predi
 # print(f"Weighted Prediction: {weighted_prediction:.2f}")
 
 # Model isimleri ve tahminlerin ortalamaları
-model_names = ['Multilinear Regression', 'Decision Tree', 'Random Forest', 'LSTM Regression', 'SVR Regression', 'KNN Model']
+model_names = ['linear', 'D-Tree', 'RF', 'LSTM', 'SVR', 'KNN', 'Kernel Ridge']
 predictions_means = [
     np.mean(linear_predictions),
     np.mean(tree_predictions),
     np.mean(forest_predictions),
     lstm_prediction,
     np.mean(svr_predictions),
-    np.mean(knn_predictions)
+    np.mean(knn_predictions),
+    np.mean(kernelRidge_prediction)
 ]
 
 # Tüm modellerin tahmin ortalamasını hesapla
@@ -135,7 +145,7 @@ average_mean = np.mean(predictions_means)
 plt.figure(figsize=(12, 7))
 
 # Her modelin tahmin ortalamasını çubuk olarak göster
-bars = plt.bar(model_names, predictions_means, color=['blue', 'green', 'orange', 'red', 'purple', 'magenta'], label='Model Averages')
+bars = plt.bar(model_names, predictions_means, color=['blue', 'green', 'orange', 'red', 'purple', 'magenta', 'pink'], label='Model Averages')
 
 # Tüm modellerin ortalamasını ek bir çubuk olarak göster
 average_bar = plt.bar('Average of Models', average_mean, color='gray', label='Average of Models')
